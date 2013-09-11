@@ -1,0 +1,67 @@
+${theme}
+
+<h3>数据导入功能</h3>
+<p>为了方便批量数据管理，目前所有数据操作功能，都是通过上传文本文件，导入数据的方式完成。</p>
+<form action="/import/" method="post" enctype="MULTIPART/FORM-DATA" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">文件编码</label>
+    <div class="controls">
+    	<select name="data_encoding">
+    		<option value="GBK">GBK</option>
+    		<option value="UTF-8">UTF-8</option>
+    	</select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">数据类型</label>
+    <div class="controls">
+    	<select name="data_type">
+    		<option value="">--请选择--</option>
+    		<option value="auth_user">账号数据</option>
+    		<option value="weibo_lib">内容库</option>
+    		<option value="timing">定时计划</option>    		
+    		<option value="template">微博模版</option>    		
+    		<option value="short_text">模版短语</option>    		
+    		
+    	</select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">导入文件</label>
+    <div class="controls">
+      <input type="file" name="file" >
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">开始导入</button>
+    </div>
+  </div>
+</form>
+
+<h3>导入数据格式</h3>
+<p>导入数据的字段分隔符统一都是<b>英文的分号</b>';'。如果字段没有值，可以用空格代替。文件里面每行就是一条记录。不需要标题行</p>
+
+
+<h3>微博账号格式</h3>
+<pre>微博应用;登陆名;登陆密码;淘宝PID;用户标签1,用户标签2</pre>
+
+<h3>内容库格式</h3>
+<pre>内容来源;类容标签;文本内容;图片地址;商品ID;冒泡库ID;
+</pre>
+
+<h3>定时计划格式</h3>
+<pre>
+计划名;用户组;任务状态(0|1)
+时间点;内容分组;内容标签;发布模版ID
+</pre>
+
+<h3>发布模版格式</h3>
+<pre>
+模版名;发送应用;短网址域名;是否放到评论;内容模版;评论模版
+</pre>
+
+<h3>模版短语格式</h3>
+<pre>
+分组名;短语
+</pre>

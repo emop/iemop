@@ -1,0 +1,53 @@
+<script type="text/javascript" language="javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+${theme}
+
+<h3>微博账号列表</h3>
+
+<p id="status_filter">
+ 状态过滤: 
+<a href="#" st='' class='btn'>全部</a>
+<a href="#" st='ok' class='btn btn-success'>正常</a>
+<a href="#" st='no_user'  class='btn btn-danger'>账号异常</a>
+<a href="#" st='expired'  class='btn btn-warning'>授权过期</a>
+</p>
+
+<table class="table table-bordered table-striped" id="account_list">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>用户标签</th>
+        <th>微博名</th>
+        <th>当前状态</th>
+        <th>粉丝数</th>
+        <th>关注数</th>
+        <th>登陆账号</th>
+        <th>上次授权时间</th>
+        <th>授权过期时间</th>        
+        <th>定时记录</th>        
+      </tr>
+    </thead>
+    <tbody>
+		
+    </tbody>
+ </table>
+ <div class="pagination">
+  <ul>
+  </ul>
+</div>
+<br/><br/>
+ <script type="text/templates" id="account_row">
+        <td>${user_auth_id}</td>
+        <td>${tags}</td>
+        <td><a href='http://weibo.com/u/${out_id}' target='_blank'>${nick}</a></td>
+        <td>${user_status}</td>
+        <td>${fans_count}</td>
+        <td>${follow_count}</td>
+        <td>${login_user}<br/>${login_password}</td>
+        <td>${last_auth_time}&nbsp;<a  target='_blank' href="http://www.zaol.cn/weibo/login.php?tid=${user_auth_id}">手动授权</a></td>
+        <td>${expire_auth_time}</td>
+        <td><a href="/static/weibo_send_queue.html?user_id=${user_auth_id}">定时记录</a></td>        
+ </script>
+ 
+<script type="text/javascript" language="javascript" src="/static/js/common_api.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/account_list.js"></script>
+ 

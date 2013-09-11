@@ -1,0 +1,35 @@
+<script type="text/javascript" language="javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+${theme}
+
+<h3>定时配置列表</h3>
+<table class="table table-bordered table-striped" id="timing_list">
+    <thead>
+      <tr>
+        <th>配置ID</th>
+        <th>配置名</th>
+        <th>用户组</th>
+        <th>状态</th>
+        <th>配置详情</th>
+        <th>更新时间</th>  
+        <th>操作</th>          
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+ </table>
+ 
+<script type="text/templates" id="timing_row">
+        <td>${auto_send_id}</td>
+        <td>${name}</td>
+        <td>${user_group}</td>
+        <td>${status}</td>
+        <td><pre>${data}</pre></td>
+        <td>${last_scan_time}</td>
+        <td><a href="" class='btn action' action='trigger_run' aid='${auto_send_id}'>立即分配</a></td>
+ </script> 
+ 
+ 
+<script type="text/javascript" language="javascript" src="/static/js/app_dailog.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/common_api.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/timing_list.js"></script> 

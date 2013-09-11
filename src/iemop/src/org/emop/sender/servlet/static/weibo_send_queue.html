@@ -1,0 +1,41 @@
+<script type="text/javascript" language="javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" language="javascript">
+ var PARAM='${request_param}';
+</script>
+
+${theme}
+
+<h3>用户定时列表</h3>
+<table class="table table-bordered table-striped" id="lib_list">
+    <thead>
+      <tr>
+        <th>定时ID</th>
+        <th>发送时间</th>        
+        <th>内容来源</th>
+        <th>图片</th>
+        <th style='max-width:300px;'>文案</th>
+        <th>发送状态</th>        
+        <th>实际发送时间</th>  
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+ </table>
+ 
+<script type="text/templates" id="lib_row">
+        <td>${timing_id}</td>
+        <td>${send_time}</td>
+        <td>${source_label}</td>        
+        <td><img src="${img_url}!190" style='max-width:80px;'/></td>
+        <td style='max-width:300px;'>${weibo_text}</td>
+        <td>${status}</td>
+        <td>${real_send_time}</td>
+        <td>
+        <a target='top' class='btn btn-primary' href="/actions/?action=send_one&uid=${user_auth_id}&tid=${timing_id}">立即发送</a>        
+        </td>
+ </script> 
+ 
+<script type="text/javascript" language="javascript" src="/static/js/common_api.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/weibo_send_list.js"></script> 
