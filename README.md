@@ -10,6 +10,8 @@ i冒泡
 
 下载地址： http://d.taodianhuo.cn/zombie/dist/iEmop-0.1.jar
 
+演示地址: http://iemop.zaol.cn:9000/
+
 如何使用
 =======
 
