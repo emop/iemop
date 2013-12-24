@@ -1,6 +1,10 @@
 package org.emop.sender;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,6 +53,7 @@ public class Main {
 			Settings s = new Settings("iemop.conf");
 			s.putSetting(Settings.HTTP_PORT, httpPort);
 			//s.save();
+			startCleanLog(s, "server.log");
 			new HttpServer(s).run();
 		}		
 
@@ -82,11 +87,46 @@ public class Main {
 			public void run() {
 				org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
 				try{
-					//updateLog4jLevel(s, name);
+					updateLog4jLevel(s, name);
 				}catch(Throwable e){
 					root.info(e.toString());
 				}
 			}
 		}, 100, 1000 * 3600 * 12);		
+	}	
+	
+	private static void updateLog4jLevel(Settings s, String name){
+        org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
+        String level = s.getString("log_level", "debug").toLowerCase().trim();
+        if(level.equals("trace")){
+                root.setLevel(org.apache.log4j.Level.TRACE);
+        }else if(level.equals("debug")){
+                root.setLevel(org.apache.log4j.Level.DEBUG);
+        }else if(level.equals("info")){
+                root.setLevel(org.apache.log4j.Level.INFO);
+        }else if(level.equals("warn")){
+                root.setLevel(org.apache.log4j.Level.WARN);
+        }
+        File r = new File("logs");
+        
+        int max_log_days = s.getInt("max_log_days", 10);                
+        Date d = new Date(System.currentTimeMillis() - 1000 * 3600 * 24 * max_log_days);                
+        DateFormat format= new SimpleDateFormat("yy-MM-dd");            
+        root.debug("Remove log before " + format.format(d));
+        for(File log : r.listFiles()){
+                if(!log.getName().startsWith(name))continue;
+                String[] p = log.getName().split("\\.");
+                String logDate = p[p.length -1];
+                if(logDate.indexOf("-") > 0){
+                        try {
+                                if(format.parse(logDate).getTime() < d.getTime()){
+                                        root.info("remove old log file:" + log.getName());
+                                        log.delete();
+                                }
+                        } catch (Exception e) {
+                                root.info(e.toString());
+                        }
+                }
+        }
 	}	
 }

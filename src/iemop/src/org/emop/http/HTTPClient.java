@@ -30,6 +30,8 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.emop.monitor.Benchmark;
@@ -58,11 +60,16 @@ public class HTTPClient {
 
 		PoolingClientConnectionManager cm = new PoolingClientConnectionManager(schemeRegistry);
 		// Increase max total connection to 200
-		cm.setMaxTotal(50);
+		cm.setMaxTotal(250);
 		// Increase default max connection per route to 20
 		cm.setDefaultMaxPerRoute(20);
 		
+		//client.httpclient = new DefaultHttpClient(cm);
+
 		client.httpclient = new DefaultHttpClient(cm);
+		HttpParams param = client.httpclient.getParams();
+		param.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 3 * 60 * 1000);
+		param.setParameter(CoreConnectionPNames.SO_TIMEOUT, 3 * 60 * 1000);
 		
 		client.supportGzip();
 		
@@ -126,7 +133,7 @@ public class HTTPClient {
 		
 		StringBuffer query = new StringBuffer(url + "?");        
         if(param == null) param = new HashMap<String, Object>();
-		
+        InputStreamReader reader = null;
 		try{
 	    	nameValuePairs = new ArrayList<NameValuePair>(param.size());
 	        for(Entry<String, Object> item : param.entrySet()){
@@ -148,18 +155,20 @@ public class HTTPClient {
 	    		httppost.setEntity(entity);
 	    	}
 	    	response = httpclient.execute(httppost);
-	    	
 	    	if(format != null && format.equals("json")){
 		    	if(response != null){
-		    		InputStreamReader reader = new InputStreamReader(response.getEntity().getContent(), 
+		    		reader = new InputStreamReader(response.getEntity().getContent(), 
 		    				"UTF-8");
 		    		result.json = (JSONObject)JSONValue.parse(reader);
-		    		if(log.isDebugEnabled()){
+		    		if(log.isDebugEnabled() && result.json != null){
 		    			log.debug("response json object:" + result.json.toJSONString());
+		    		}else {
+		    			log.warn("Failed to parse result as JSON object.");
 		    		}
 		    		if(result.json != null){
 		    			result.isOK = true;
 		    		}
+		    		//reader.close();
 		    	}
 	    	}else {
 	    		result.text = new String(EntityUtils.toByteArray(response.getEntity()));
@@ -172,6 +181,13 @@ public class HTTPClient {
 		}catch (Throwable e) {
 			log.warn(e, e);
 		}finally{
+			if(reader != null){
+				try{
+					reader.close();
+				}catch(IOException e) {
+					log.error(e, e);
+				}
+			}
 			mark.done();
 		}
 		return result;

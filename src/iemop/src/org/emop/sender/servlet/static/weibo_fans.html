@@ -1,0 +1,71 @@
+<script type="text/javascript" language="javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+${theme}
+
+<div>
+	<table>
+		<tr>
+			<td>粉丝总量：</td><td id="fans_count"></td>
+		</tr>
+	</table>
+</div>
+
+<h3>微博账号列表</h3>
+<p id="status_filter">
+ 状态过滤: 
+<a href="#" st='' class='btn'>全部</a>
+<a href="#" st='ok' class='btn btn-success'>正常</a>
+<a href="#" st='no_user'  class='btn btn-danger'>账号异常</a>
+<a href="#" st='expired'  class='btn btn-warning'>授权过期</a>
+</p>
+
+<table class="table table-bordered table-striped" id="account_list">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>用户标签</th>
+        <th>微博名</th>
+        <th>账号状态</th>
+        <th>关注数</th>
+        <th>粉丝数</th>
+        
+        <th>关注状态</th>
+        
+        <th>等待关注</th>
+        <th>加关注数量</th>
+        <th>回粉数量</th>
+
+        <th>回粉检查时间</th>
+        <th>上次关注时间</th>
+      </tr>
+    </thead>
+    <tbody>
+		
+    </tbody>
+ </table>
+ <div class="pagination">
+  <ul>
+  </ul>
+</div>
+<br/><br/>
+ <script type="text/templates" id="account_row">
+        <td>${user_auth_id}</td>
+        <td>${tags}</td>
+        <td><a href='http://weibo.com/u/${out_id}' target='_blank'>${nick}</a></td>
+        <td>${user_status}</td>
+        
+        <td>${follow_count}</td>
+        <td>${fans_count}</td>
+
+        <td>${fans_status_label}</td>
+                
+        <td>${waiting_do_follow}</td>
+        <td>${do_followed}</td>
+        <td>${fans_followed}</td>
+           
+        <td>${fans_check_time}</td>
+        <td>${update_time}</td>
+ </script>
+ 
+<script type="text/javascript" language="javascript" src="/static/js/common_api.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/fans_list.js"></script>
+ 

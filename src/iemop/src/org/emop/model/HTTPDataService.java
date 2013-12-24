@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Pattern;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.xml.crypto.Data;
 
 import org.emop.api.TaodianApi;
 import org.emop.cache.Cache;
@@ -351,12 +357,64 @@ public class HTTPDataService implements DataService {
 				if(obj.containsKey("user_auth_id")){
 					obj.remove("user_auth_id");
 				}
-				task.param.putAll(obj);				
+				for(Object k: obj.keySet()){
+					task.param.put(k + "", obj.get(k) + "");
+				}
 				r.add(task);
 			}
 		}
 		return r;
 	}
-	
+
+	@Override
+	public List<WeiboTaskItem> getWeibolist(int appId, String status, int pageSize, int pageNo){
+		// TODO Auto-generated method stub
+		Map<String, Object> param = new HashMap<String, Object>();
+		if(appId > 0){
+			param.put("app_id", appId);
+		}
+		param.put("user_status", status);
+		if(pageSize > 0){
+			param.put("page_size", pageSize);
+			if(pageNo > 0){
+				param.put("page_no", pageNo);
+			}
+		}
+		HTTPResult result = api.call("timing_weibo_account_list", param);
+		List<WeiboTaskItem> r = new ArrayList<WeiboTaskItem>();
+		DateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date ref_date = new Date(System.currentTimeMillis());
+		long ref_time = ref_date.getTime()-1000*60*60*24;
+		Date db_data = null;
+		if(result.isOK){
+			JSONObject rd = (JSONObject)result.json.get("data");
+			JSONArray array = (JSONArray)rd.get("data");
+			for(int i = 0; i< array.size(); i++){
+				JSONObject obj = (JSONObject)array.get(i);
+				WeiboTaskItem task = new WeiboTaskItem();
+				
+				String timestr = obj.get("update_time").toString();
+				try{
+					db_data = sdf.parse(timestr);
+				}catch (ParseException e){
+					e.printStackTrace();
+				}
+				long db_time = db_data.getTime();
+				if(ref_time > db_time){
+					task.taskId = Long.parseLong(obj.get("app_id") + "");
+					task.authId = obj.get("user_auth_id") + "";
+					task.action = obj.get("user_status") + "";
+					task.param.put("login_user", obj.get("login_user") + "");
+					task.param.put("login_password", obj.get("login_password") + "");
+					task.param.put("out_id", obj.get("out_id") + "");
+					task.param.put("platform", obj.get("platform") + "");
+					r.add(task);
+				}
+			}
+		}
+		
+		return r;
+	}
+
 	
 }

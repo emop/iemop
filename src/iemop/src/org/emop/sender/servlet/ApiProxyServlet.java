@@ -25,8 +25,8 @@ public class ApiProxyServlet extends HttpServlet {
 	throws ServletException, IOException {
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setCharacterEncoding("utf8");
+
 		response.setContentType("application/json");
-		
 		String api_name = request.getParameter("__api_name");
 		
 		if(api_name == null || api_name.length() == 0){

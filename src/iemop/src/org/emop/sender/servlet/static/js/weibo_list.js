@@ -31,4 +31,25 @@ $(function(){
 	
 	load_account_list(APP_PARAM);
 	Paging($(".pagination"), APP_PARAM, load_account_list);
+	
+	$("#filter").click(function(){
+		APP_PARAM.tags = $("#cate_name").val();
+		APP_PARAM.page_no = 0;
+		load_account_list(APP_PARAM);
+		
+		return false;
+	});
+
+	$("#import").click(function(){
+		TC.call("timing_weibo_lib_update", {'emop_cate':$("#cate_name").val()}, function(data){
+			if(data.status == 'ok'){
+				$.show_ok("导入任务提交成功，等10多秒后刷新页面。");
+			}else {
+				$.show_ok("导入任务提交失败， 过会儿再试。");
+			}
+		});
+		
+		return false;
+	});
+	
 });

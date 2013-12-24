@@ -19,7 +19,7 @@ import org.mortbay.jetty.servlet.ServletHandler;
 
 
 public class HttpServer {
-	private Settings settings = null;
+	public Settings settings = null;
 	private Log log = LogFactory.getLog("wx.http");
 	
 	//public TimingService timingService = null;

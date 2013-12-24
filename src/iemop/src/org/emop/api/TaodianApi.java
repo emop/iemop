@@ -33,7 +33,7 @@ public class TaodianApi {
 		}
 	}
 	
-	public Object call(String name, Map<String, Object> param){
+	public HTTPResult call(String name, Map<String, Object> param){
 		Map<String, Object> p = this.newDefaultParam();
 		p.put("name", name);
 		if(param == null){

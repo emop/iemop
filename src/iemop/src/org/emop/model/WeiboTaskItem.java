@@ -17,7 +17,8 @@ public class WeiboTaskItem {
 		StringBuffer b = new StringBuffer();
 		for(Entry<String, String> e : param.entrySet()){
 			try {
-				b.append(e.getKey() + "=" + URLEncoder.encode(e.getValue(), "UTF-8") + ",");
+				if(e.getValue()  == null)continue;
+				b.append(e.getKey()  + "=" + URLEncoder.encode(e.getValue() + "", "UTF-8") + ",");
 			} catch (UnsupportedEncodingException e1) {
 			}
 		}

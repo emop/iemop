@@ -2,6 +2,25 @@
 ${theme}
 
 <h3>内容库列表</h3>
+
+<div><b>类目:</b>
+<select id="cate_name">
+	<option value=''>--所有类目--</option>
+	<option value='女装'>女装</option>
+	<option value='女鞋'>女鞋</option>
+	<option value='女包'>女包</option>
+	<option value='男装'>男装</option>
+	<option value='配饰'>配饰</option>
+	<option value='美容'>美容</option>
+	<option value='家居'>家居</option>
+	<option value='母婴'>母婴</option>
+	<option value='户外'>户外</option>
+	<option value='美食'>美食</option>
+	<option value='数码'>数码</option>
+</select>
+<a action='import' class="btn btn-primary" href="#" id="import">手动导入</a>
+<a action='filter' class="btn btn-primary" href="#" id="filter">分类过滤</a>
+</div>
  <div class="pagination">
   <ul>
   </ul>
@@ -14,7 +33,8 @@ ${theme}
         <th>内容来源</th>
         <th>图片</th>
         <th>文案</th>
-        <th>评论</th>        
+        <th>评论</th>     
+        <th>标签</th>                
         <th>状态</th>        
         <th>更新时间</th>  
       </tr>
@@ -35,6 +55,7 @@ ${theme}
         <td><img src="${img_url}" style='max-width:80px;'/></td>
         <td style='max-width:300px;'>${weibo_text}</td>
         <td></td>
+        <td>${tags}</td>
         <td>${status}</td>
         <td>${update_time}</td>
  </script> 

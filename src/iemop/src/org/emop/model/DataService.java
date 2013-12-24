@@ -17,4 +17,6 @@ public interface DataService {
 	public List<WeiboTaskItem> getWeiboActionTask(int appId, String queue, int size);	
 	
 	public List<WeiboSendRecord> getUserSendTask(int userId, int timingId);
+	
+	public List<WeiboTaskItem> getWeibolist(int appId, String status, int pageSize, int pageNo);
 }
