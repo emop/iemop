@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>	
+	<win name='LoginPanel' class='org.emop.gui.LoginPanel' >
+		<initPanel ref='xui' />
+	</win>
+	<win name='StatusPanel' class='org.emop.gui.ProxyStatusPanel' >
+		<initPanel ref='xui' />
+	</win>
+	
+	<win name='main' class='org.emop.gui.MainFrame'>
+		<size x='350' y='250' />
+		<title value="iEmop--小冒泡微博发送程序" />
+		<!--  RootPane().setJMenuBar(menu.getMenuBar()); -->
+		<initPanel ref='xui' />
+		<rootPane>
+			<jMenuBar ref="menuBar" />
+		</rootPane>
+		
+		<!--<layout ref='null' /> -->
+		<add name="mainLayout" align="Center" class="javax.swing.JPanel">							
+			<layout name='cardLayout' class='java.awt.CardLayout' />
+			
+			<add ref="LoginPanel" align="login" />
+			<add ref="StatusPanel" align="status" />
+		</add>
+	</win>
+</root> 

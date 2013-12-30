@@ -3,3 +3,5 @@
 # Package Files #
 *.war
 *.ear
+
+src/iemop/src/org/emop/sender/Version.java
