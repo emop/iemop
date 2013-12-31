@@ -27,6 +27,8 @@ public class HttpServer {
 	public TaodianApi api = null;
 	public DataService dataService = null;
 	public static HttpServer ins = null;
+	
+	public int httpPort = 0;
 	protected ThreadPoolExecutor taskPool = null;
 
 	
@@ -37,14 +39,8 @@ public class HttpServer {
 	}	
 	
 	public void run(){
-		StatusMonitor.startMonitor();
-		
-		String appKey = settings.getString(Settings.TD_API_ID, "");
-		String appSecret = settings.getString(Settings.TD_API_SECRET, "");
-		
-		log.info("connect with taodian app key:" + appKey + ", secret:" + appSecret);
-		
-		api = new TaodianApi(appKey, appSecret, settings.getString(Settings.TD_API_ROUTE, "http://api.zaol.cn/api/route"));
+		StatusMonitor.startMonitor();		
+		loadApiSettings();
 		
 		authManager = new AuthenticationManager();
 		
@@ -99,7 +95,7 @@ public class HttpServer {
 	}
 	
 	private void startHTTPServer(){
-		int httpPort = settings.getInt(Settings.HTTP_PORT, -1);
+		httpPort = settings.getInt(Settings.HTTP_PORT, -1);
 		Server server = new Server(httpPort);
         ServletHandler handler = new ServletHandler();
         server.setHandler(handler);
@@ -120,8 +116,18 @@ public class HttpServer {
 			server.start();
 			server.join();
 		} catch (Exception e) {
+			httpPort = -1;
 			log.error(e.toString(), e);
 		}
 	}	
+	
+	public void loadApiSettings(){
+		String appKey = Settings.getString(Settings.TD_API_ID, "");
+		String appSecret = Settings.getString(Settings.TD_API_SECRET, "");
+		
+		log.info("connect with taodian app key:" + appKey + ", secret:" + appSecret);
+		
+		api = new TaodianApi(appKey, appSecret, Settings.getString(Settings.TD_API_ROUTE, "http://api.zaol.cn/api/route"));
+	}
 
 }

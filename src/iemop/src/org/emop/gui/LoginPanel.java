@@ -19,19 +19,19 @@ import org.emop.gui.xui.XUIContainer;
 public class LoginPanel extends JPanel{
 	public void initPanel(final XUIContainer xui){
 		this.setLayout(new BorderLayout());	
-        final JTextField name = new JTextField("");
-        final JPasswordField password = new JPasswordField("");
-        final JTextField internal = new JTextField("");
-        final JTextField proxy = new JTextField("");        
+        final JTextField appId = new JTextField("");
+        final JTextField appSecret = new JTextField("");
+        final JTextField apiRoute = new JTextField("");
+       // final JTextField proxy = new JTextField("");        
         
-        JLabel nameLabel = new JLabel("外部域名: ");
-        JLabel passwordLabel = new JLabel("注册密码: ");
-        JLabel internalLabel = new JLabel("内部地址: ");
-        JLabel proxyLabel = new JLabel("HTTP代理: ");
+        JLabel appIdLabel = new JLabel("冒泡应用ID: ");
+        JLabel appSecretLabel = new JLabel("冒泡应用密码: ");
+        JLabel apiRouterLabel = new JLabel("服务器地址: ");
+       // JLabel proxyLabel = new JLabel("HTTP代理: ");
         
-        nameLabel.setLabelFor(name);
-        passwordLabel.setLabelFor(password);
-        proxyLabel.setLabelFor(proxy);        
+        appIdLabel.setLabelFor(appId);
+        appSecretLabel.setLabelFor(appSecret);
+      //  proxyLabel.setLabelFor(proxy);        
         
         JPanel textControlsPane = new JPanel();
         GridBagLayout gridbag = new GridBagLayout();
@@ -39,8 +39,8 @@ public class LoginPanel extends JPanel{
 
         textControlsPane.setLayout(gridbag);
 
-        JLabel[] labels = {nameLabel, passwordLabel, internalLabel,  proxyLabel};
-        JTextField[] textFields = {name, password, internal, proxy};
+        JLabel[] labels = {appIdLabel, appSecretLabel, apiRouterLabel};
+        JTextField[] textFields = {appId, appSecret, apiRoute};
         addLabelTextRows(labels, textFields, gridbag, textControlsPane);
 
         //textControlsPane.add(actionLabel, c);
@@ -71,10 +71,10 @@ public class LoginPanel extends JPanel{
         /**
          * 注册GUI控件到XUI.
          */
-        xui.addComponent(EventsHandler.REMOTE_DOMAIN, name);
-        xui.addComponent(EventsHandler.PROXY_PASSWORD, password);
-        xui.addComponent(EventsHandler.INTERNAL_DOMAIN, internal);
-        xui.addComponent(EventsHandler.HTTP_PROXY, proxy);
+        xui.addComponent(EventsHandler.TD_APP_KEY, appId);
+        xui.addComponent(EventsHandler.TD_APP_SECRET, appSecret);
+        xui.addComponent(EventsHandler.TD_API_ROUTER, apiRoute);
+     //   xui.addComponent(EventsHandler.HTTP_PROXY, proxy);
         
         xui.addComponent(EventsHandler.SAVE_SETTINGS, save);
         xui.addComponent(EventsHandler.CLOSE_SETTINGS, close);

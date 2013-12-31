@@ -34,15 +34,24 @@ public class Settings {
 	public static final String INTERNAL_DOMAIN = "internal_domain";	
 	
 	private static Log log = LogFactory.getLog("settings");
-	protected Properties settings = System.getProperties();	
-	private String confName = "weibo.conf";
+	protected static Properties settings = System.getProperties();	
+	protected static Properties userSettings = null;//System.getProperties();	
+
 	
+	private String confName = "iemop.conf";
+	
+	public String path = null;
+	//private 
 	//private String[] masterSettings = new String[]{};
 	//private String[] routeSettings = new String[]{};
+	public static Settings ins = null;
 	
-	public Settings(String name){
-		this.confName = name;
+	public Settings(String path){
+	//	this.confName = name;
+		this.path = path;
 		this.loadSettings();
+		
+		ins = this;
 	}
 	
 	public void loadSettings(){
@@ -57,12 +66,14 @@ public class Settings {
 			log.error(e, e.getCause());
 		}
 		
-		File f = new File(this.confName);
+		File f = new File(path);
 		InputStream ins = null;
+		userSettings = new Properties();
 		if(f.isFile()){
+			log.info("load settings from:" + this.path);
 			try {
 				ins = new FileInputStream(f);
-				settings.load(ins);
+				userSettings.load(ins);
 			} catch (FileNotFoundException e) {
 				log.error(e, e.getCause());
 			} catch (IOException e) {
@@ -75,19 +86,25 @@ public class Settings {
 					}
 				}
 			}
+		}else {
+			log.info("Not found file:" + this.path);
 		}
 	}
 	
-	public void putSetting(String name, String val){
-		this.settings.put(name, val);
+	public static void putSetting(String name, String val){
+		userSettings.put(name, val);
 	}
 	
-	public String getString(String name, String def){
-		return settings.getProperty(name, def);
+	public static String getString(String name, String def){
+		String n = userSettings.getProperty(name, null);
+		if(n == null){
+			n = settings.getProperty(name, def);
+		}
+		return n;
 	}
 	
-	public int getInt(String name, int def){
-		String val = settings.getProperty(name);
+	public static int getInt(String name, int def){
+		String val = getString(name, def + "");
 		int intVal = def;
 		try{
 			if(val != null) intVal = Integer.parseInt(val);
@@ -100,9 +117,9 @@ public class Settings {
 	public void save(){
 		OutputStream os = null;
 		try {
-			log.info("Saveing settings to " + confName);
-			os = new FileOutputStream(new File(confName));
-			this.settings.store(os, "");
+			log.info("Saveing settings to " + path);
+			os = new FileOutputStream(new File(path));
+			userSettings.store(os, "");
 		} catch (IOException e) {
 			log.error(e.toString(), e);
 		} finally{

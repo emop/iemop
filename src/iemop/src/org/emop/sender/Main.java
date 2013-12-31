@@ -2,6 +2,7 @@ package org.emop.sender;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,6 +17,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.emop.gui.GUIMain;
 import org.emop.sender.settings.Settings;
 
 public class Main {
@@ -26,14 +28,26 @@ public class Main {
 	public static final String PREFIX = "prefix";
 	public static final String HTTPPORT = "http_port";	
 	public static final String HTTP_URL = "http_url";
+	public static final String NO_GUI = "no_gui";
 	
 	public static void main(String[] args) throws IOException{
 		Options options = new Options();
 		options.addOption(VERSION, false, "show version.");
 		options.addOption(PREFIX, true, "the prefix of HTTP service.");
 		options.addOption(HTTPPORT, true, "http listen port.");
+		options.addOption(NO_GUI, false, "disable gui windows");
 
 		CommandLine cmd = null;
+		
+		String jarUrl = "iemop.conf";
+		try {
+			jarUrl = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		File jarPath = new File(jarUrl);
+		File workRoot = jarPath.getParentFile();
+		System.setProperty("user.dir", workRoot.getAbsolutePath());
 		
 		try{
 			CommandLineParser parser = new PosixParser();
@@ -50,12 +64,17 @@ public class Main {
 		}else {
 			String httpPort = cmd.getOptionValue(HTTPPORT, "8927");
 			initLog4jFile("server.log");
-			Settings s = new Settings("iemop.conf");
-			s.putSetting(Settings.HTTP_PORT, httpPort);
+			Settings s = new Settings(new File(workRoot, "iemop.conf").getAbsolutePath());
+			Settings.putSetting(Settings.HTTP_PORT, httpPort);
 			//s.save();
 			startCleanLog(s, "server.log");
 			new HttpServer(s).run();
-		}		
+		}
+		
+		if(!cmd.hasOption(NO_GUI)){
+			GUIMain.main(args);
+			//return;
+		}
 
 		System.out.println("Stopped.");
 	}	
@@ -97,7 +116,7 @@ public class Main {
 	
 	private static void updateLog4jLevel(Settings s, String name){
         org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
-        String level = s.getString("log_level", "debug").toLowerCase().trim();
+        String level = Settings.getString("log_level", "debug").toLowerCase().trim();
         if(level.equals("trace")){
                 root.setLevel(org.apache.log4j.Level.TRACE);
         }else if(level.equals("debug")){
@@ -109,7 +128,7 @@ public class Main {
         }
         File r = new File("logs");
         
-        int max_log_days = s.getInt("max_log_days", 10);                
+        int max_log_days = Settings.getInt("max_log_days", 10);                
         Date d = new Date(System.currentTimeMillis() - 1000 * 3600 * 24 * max_log_days);                
         DateFormat format= new SimpleDateFormat("yy-MM-dd");            
         root.debug("Remove log before " + format.format(d));

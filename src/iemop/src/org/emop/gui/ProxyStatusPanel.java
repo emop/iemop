@@ -27,23 +27,23 @@ public class ProxyStatusPanel extends JPanel {
 
 	public void initPanel(final XUIContainer xui){
 		this.setLayout(new BorderLayout());	
-        final JTextField name = new JTextField("");
-        final JTextField internal = new JTextField("");
-        final JTextField requestCount = new JTextField("");
-        final JTextField activeUser = new JTextField("");
-        final JTextField updated = new JTextField("");
+        final JTextField localDomain = new JTextField("");
+        final JTextField settingPath = new JTextField("");
+       // final JTextField requestCount = new JTextField("");
+        final JTextField tdApi = new JTextField("");
+        final JTextField status = new JTextField("");
         
-        JLabel nameLabel = new JLabel("外部域名: ");
-        JLabel internalLabel = new JLabel("内部地址: ");
-        JLabel proxyLabel = new JLabel("转发次数: ");
-        JLabel userLabel = new JLabel("活动用户: ");
+        JLabel localLabel = new JLabel("本地访问: ");
+        JLabel settingsLabel = new JLabel("配置文件: ");
+        //JLabel proxyLabel = new JLabel("服务: ");
+        JLabel userLabel = new JLabel("冒泡成功次数: ");
         JLabel updatedLabel = new JLabel("状态: ");
         
-        name.setEditable(false);
-        internal.setEditable(false);
-        requestCount.setEditable(false);
-        activeUser.setEditable(false);
-        updated.setEditable(false);
+        localDomain.setEditable(false);
+        settingPath.setEditable(false);
+        //requestCount.setEditable(false);
+        tdApi.setEditable(false);
+        status.setEditable(false);
                 
         JPanel textControlsPane = new JPanel();
         GridBagLayout gridbag = new GridBagLayout();
@@ -51,8 +51,8 @@ public class ProxyStatusPanel extends JPanel {
 
         textControlsPane.setLayout(gridbag);
 
-        JLabel[] labels = {nameLabel, internalLabel,  proxyLabel, userLabel, updatedLabel};
-        JTextField[] textFields = {name, internal, requestCount, activeUser, updated};
+        JLabel[] labels = {localLabel, settingsLabel,   userLabel, updatedLabel};
+        JTextField[] textFields = {localDomain, settingPath, tdApi, status};
         addLabelTextRows(labels, textFields, gridbag, textControlsPane);
 
         //textControlsPane.add(actionLabel, c);
@@ -74,11 +74,11 @@ public class ProxyStatusPanel extends JPanel {
         /**
          * 注册GUI控件到XUI.
          */
-        xui.addComponent(EventsHandler.STATUS_REMOTE, name);
-        xui.addComponent(EventsHandler.STATUS_LOCAL, internal);        
-        xui.addComponent(EventsHandler.STATUS_REQUEST, requestCount);
-        xui.addComponent(EventsHandler.STATUS_ACTIVE_USER, activeUser);
-        xui.addComponent(EventsHandler.STATUS_UPDATED, updated);
+        xui.addComponent(EventsHandler.STATUS_DOMAIN, localDomain);
+        xui.addComponent(EventsHandler.STATUS_SETTINGPATH, settingPath);        
+    //    xui.addComponent(EventsHandler.STATUS_REQUEST, requestCount);
+        xui.addComponent(EventsHandler.STATUS_TDAPI, tdApi);
+        xui.addComponent(EventsHandler.STATUS_UPDATED, status);
 	}
 	
     private void addLabelTextRows(JLabel[] labels, JTextField[] textFields,

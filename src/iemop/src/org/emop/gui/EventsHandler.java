@@ -10,23 +10,26 @@ import javax.swing.JTextField;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.emop.api.TaodianApi;
 import org.emop.gui.events.BroadCastEvent;
 import org.emop.gui.events.EventAction;
 import org.emop.gui.xui.XUIContainer;
+import org.emop.sender.HttpServer;
 import org.emop.sender.WeiboSender;
+import org.emop.sender.settings.Settings;
 //import org.http.channel.client.ProxyClient;
 //import org.http.channel.client.StatusListener;
 
 public class EventsHandler {
-	public static final String REMOTE_DOMAIN = "remote_domain";
-	public static final String INTERNAL_DOMAIN = "internal_domain";
-	public static final String PROXY_PASSWORD = "proxy_password";
+	public static final String TD_APP_KEY = "td_app_key";
+	public static final String TD_API_ROUTER = "td_api_router";
+	public static final String TD_APP_SECRET = "td_app_secret";
 	public static final String HTTP_PROXY = "http_proxy";
 	
-	public static final String STATUS_REMOTE = "status_remote";
-	public static final String STATUS_LOCAL = "status_local";
+	public static final String STATUS_DOMAIN = "status_remote";
+	public static final String STATUS_SETTINGPATH = "status_local";
 	public static final String STATUS_REQUEST = "status_request";
-	public static final String STATUS_ACTIVE_USER = "status_active_user";
+	public static final String STATUS_TDAPI = "status_active_user";
 	public static final String STATUS_UPDATED = "status_updated";	
 	
 	public static final String SAVE_SETTINGS = "saveSettings";
@@ -67,7 +70,7 @@ public class EventsHandler {
 	 * @param event
 	 */
 	@EventAction(order=1)
-	public void Connection(final BroadCastEvent evnet){
+	public void UserSettings(final BroadCastEvent evnet){
 		JPanel actionPanel = (JPanel)xui.getByName("mainLayout");
 		CardLayout layout = (CardLayout)actionPanel.getLayout();
 		layout.show(actionPanel, "login");		
@@ -80,11 +83,51 @@ public class EventsHandler {
 	@EventAction(order=1)
 	public void ShowSettings(final BroadCastEvent event){
 		JTextField field;
+		
+		field = (JTextField)xui.getByName(TD_APP_KEY);
+		if(field != null){
+			field.setText(Settings.getString(Settings.TD_API_ID, ""));
+		}
+
+		field = (JTextField)xui.getByName(TD_APP_SECRET);
+		if(field != null){
+			field.setText(Settings.getString(Settings.TD_API_SECRET, ""));
+		}
+
+		field = (JTextField)xui.getByName(TD_API_ROUTER);
+		if(field != null){
+			field.setText(Settings.getString(Settings.TD_API_ROUTE, "http://api.zaol.cn/api/route"));
+		}
 	}
 	
 	@EventAction(order=1)
 	public void saveSettings(final BroadCastEvent event){
 		JTextField field;
+		
+		field = (JTextField)xui.getByName(TD_APP_KEY);
+		if(field != null){
+			Settings.putSetting(Settings.TD_API_ID, field.getText());
+		}
+
+		field = (JTextField)xui.getByName(TD_APP_SECRET);
+		if(field != null){
+			Settings.putSetting(Settings.TD_API_SECRET, field.getText());
+		}
+
+		field = (JTextField)xui.getByName(TD_API_ROUTER);
+		if(field != null){
+			Settings.putSetting(Settings.TD_API_ROUTE, field.getText());
+		}
+		
+		HttpServer.ins.loadApiSettings();
+		
+		Settings.ins.save();
+		
+		ProxyStatus(event);
+	}
+	
+	@EventAction(order=1)
+	public void closeSettings(final BroadCastEvent event){
 		ProxyStatus(event);
 	}
 	
@@ -110,20 +153,23 @@ public class EventsHandler {
 		if(!proxy.isRunning){
 			proxy.run();
 		}
+		*/
+		
+		String appId = Settings.getString(Settings.TD_API_ID, "");
+		String secret = Settings.getString(Settings.TD_API_SECRET, "");
 		
 		JPanel actionPanel = (JPanel)xui.getByName("mainLayout");
 		CardLayout layout = (CardLayout)actionPanel.getLayout();			
 		
-		if(r == null || r.length() == 0 || l == null || l.length() == 0){
-			//this.ShowSettings(event);
+		if(appId == null || appId.length() == 0 || secret == null || secret.length() == 0){
+			this.ShowSettings(event);
 			log.info("OpenMainFrame......login");
 			layout.show(actionPanel, "login");
 		}else {
-			//this.ShowStatus(event);
+			this.ShowStatus(event);
 			log.info("OpenMainFrame......status");
 			layout.show(actionPanel, "status");
 		}
-		*/
 	}
 	
 	/**
@@ -148,32 +194,28 @@ public class EventsHandler {
 	}
 	
 	private void updateStatus(){
-		JTextField field = (JTextField)xui.getByName(STATUS_REMOTE);
-		//name.setText("http://proyx-nsn.deonwu84.com:8080");
-		/*
-		if(field != null){
-			field.setText(proxy.settings.getString(Settings.REMOTE_DOMAIN, ""));
+		JTextField field = (JTextField)xui.getByName(STATUS_DOMAIN);
+		
+		HttpServer s = HttpServer.ins;
+		if(s != null && s.httpPort > 0){
+			field.setText("http://127.0.0.1:" + (s != null ? s.httpPort : 8927));
+		}else {
+			field.setText("本地服务启动失败。");			
 		}
-
-		field = (JTextField)xui.getByName(STATUS_LOCAL);
+		
+		field = (JTextField)xui.getByName(STATUS_SETTINGPATH);
 		if(field != null){
-			field.setText(proxy.settings.getString(Settings.INTERNAL_DOMAIN, ""));			
+			field.setText(Settings.ins.path);			
 		}
-
-		field = (JTextField)xui.getByName(STATUS_REQUEST);
+		
+		field = (JTextField)xui.getByName(STATUS_TDAPI);
 		if(field != null){
-			field.setText(proxy.status.requestCount + "");
+			field.setText(TaodianApi.okCount + "");
 		}
-
-		field = (JTextField)xui.getByName(STATUS_ACTIVE_USER);
-		if(field != null){
-			field.setText(proxy.auth.activeUserCount() + "");
-		}
-
+		
 		field = (JTextField)xui.getByName(STATUS_UPDATED);
 		if(field != null){
-			field.setText(proxy.status.connection + " at " + format.format(proxy.status.lastActive));
+			field.setText(WeiboSender.statusMsg);
 		}
-		*/		
 	}
 }

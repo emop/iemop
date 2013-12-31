@@ -25,6 +25,8 @@ public class TaodianApi {
 	
 	private HTTPClient http = HTTPClient.create();
 	
+	public static int okCount = 0;
+	
 	public TaodianApi(String appKey, String secret, String apiUrl){
 		this.appKey = appKey;
 		this.appSecret = secret;

@@ -52,7 +52,9 @@ public class GUIMain {
 		initWorkDir();
 		//services = createPrivilegedProxy(new DefaultBookController(runingJNLP(),
 	 	//		runningSandbox()));	
-		Settings s = new Settings(new File(workDir, "client.conf").getAbsolutePath());		
+		if(Settings.ins == null){
+			new Settings(new File(workDir, "iemop.conf").getAbsolutePath());		
+		}
 		//ProxyClient proxy = new ProxyClient(s);
 		//proxy.run();
 

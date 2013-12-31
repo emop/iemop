@@ -43,7 +43,19 @@ public class MenuToolbar {
 	//private ResourceBundle rb = new SimpleResourceBound();	
 	private Map<String, BookAction> actions = new HashMap<String, BookAction>();
 	private EventQueue events = null;
-	
+	private static Map<String, String> rb = new HashMap<String, String>();
+	static{
+		rb.put(CONNECTION, "链接服务器");
+		rb.put(SHOW_STATUS, "服务状态");
+		rb.put(USER_SETTING, "服务设置");
+
+		rb.put(EXIT, "退出");
+		rb.put(ABOUT, "关于");
+
+		rb.put("File", "文件");
+		rb.put("Help", "帮助");
+		
+	}
 	public class BookAction extends AbstractAction {
 		private static final long serialVersionUID = -6101997393914923387L;
 		//private boolean processing = false;
@@ -115,7 +127,7 @@ public class MenuToolbar {
 		JMenuBar menubar = new JMenuBar();
 		JMenu fileMenu = new JMenu(i18n("File"));
 
-		fileMenu.add($(CONNECTION));
+		//fileMenu.add($(CONNECTION));
 		fileMenu.add($(SHOW_STATUS));
 		fileMenu.add($(USER_SETTING));
 		
@@ -156,7 +168,8 @@ public class MenuToolbar {
 	}
 	
 	public String i18n(String key){
-		return key;
+		String v = rb.get(key);		
+		return v != null ? v : key;
 	}
 }
 

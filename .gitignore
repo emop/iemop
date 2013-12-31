@@ -5,3 +5,11 @@
 *.ear
 
 src/iemop/src/org/emop/sender/Version.java
+src/iemop/bin
+src/iemop/dist
+src/iemop/build
+
+src/iemop/iemop.conf
+src/iemop/logs
+
+src/iemop/test_key

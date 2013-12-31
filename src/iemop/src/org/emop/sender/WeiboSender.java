@@ -74,7 +74,12 @@ public class WeiboSender {
 	 */
 	public List<Integer> weiboApps = new ArrayList<Integer>(); 
 
-	public List<String> actionQueue = new ArrayList<String>(); 
+	public List<String> actionQueue = new ArrayList<String>();
+	
+	/**
+	 * GUI 界面上显示的程序状态。
+	 */
+	public static String statusMsg = "运行中";
 	
 	public WeiboSender(DataService api){
 		this.api = api;
