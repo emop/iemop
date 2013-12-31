@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,10 +45,12 @@ public class EventsHandler {
 	
 	private XUIContainer xui = null;
 	//private ProxyClient proxy = null;
+	private static EventsHandler e = null;
+	private static long lastUpdateTime = System.currentTimeMillis();
 	
 	public EventsHandler(XUIContainer xui, WeiboSender s){
 		this.xui = xui;
-		
+		this.e = this;
 	}
 	
 	@EventAction(order=1)
@@ -216,6 +219,17 @@ public class EventsHandler {
 		field = (JTextField)xui.getByName(STATUS_UPDATED);
 		if(field != null){
 			field.setText(WeiboSender.statusMsg);
+		}
+	}
+	
+	public static void refreshStatus(){
+		if(e != null && System.currentTimeMillis() - lastUpdateTime > 1000){
+			lastUpdateTime = System.currentTimeMillis();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run(){
+					e.updateStatus();
+				}
+			});
 		}
 	}
 }

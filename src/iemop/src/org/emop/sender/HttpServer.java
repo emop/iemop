@@ -18,7 +18,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
 
 
-public class HttpServer {
+public class HttpServer extends Thread{
 	public Settings settings = null;
 	private Log log = LogFactory.getLog("wx.http");
 	

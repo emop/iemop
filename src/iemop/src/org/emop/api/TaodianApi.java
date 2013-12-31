@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.emop.gui.EventsHandler;
 import org.emop.http.HTTPClient;
 import org.emop.http.HTTPResult;
 import org.json.simple.JSONValue;
@@ -56,6 +57,10 @@ public class TaodianApi {
 		if(r.json != null){
 		 	if(r.getString("status").equals("ok")){
 				   r.isOK = true;
+				   
+				   okCount++;
+				   //只有在GUI模式下有用。删除不影像其他逻辑运行。
+				   EventsHandler.refreshStatus();
 			}else {
 				r.errorMsg = r.getString("msg");
 				r.errorCode = r.getString("code");

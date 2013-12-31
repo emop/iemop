@@ -68,7 +68,7 @@ public class Main {
 			Settings.putSetting(Settings.HTTP_PORT, httpPort);
 			//s.save();
 			startCleanLog(s, "server.log");
-			new HttpServer(s).run();
+			new HttpServer(s).start();
 		}
 		
 		if(!cmd.hasOption(NO_GUI)){
